@@ -11,10 +11,11 @@
 - **Host Indicator** — Identifies the host in player list.
 - **Unused Hats** — Returns "unused hats" in character customization at no cost.
 - **Quick Menu Return** — Allows you to return to the main menu using a keyboard shortcut.
+- **Config** — You can change default keybinds
 
 ## Controls
 
 | Key | Action |
 |:---:|---|
-| `F9` | Return to the main menu |
-| `F10` | Toggle the FPS and ping display |
+| `F9` (Default)  | Return to the main menu |
+| `F10` (Default) | Toggle the FPS and ping display |
