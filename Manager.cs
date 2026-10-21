@@ -1,10 +1,12 @@
-﻿using Il2Cpp;
+﻿using EnhancedPlus.ConfigStuff;
+using Il2Cpp;
 using Il2CppFishNet;
+using MasterHell.Configs;
 using MelonLoader;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-[assembly: MelonInfo(typeof(EnhancedPlus.Manager), "Enhanced+", "1.0.0", "Nullframe Collective", null)]
+[assembly: MelonInfo(typeof(EnhancedPlus.Manager), "Enhanced+", "1.1.0", "Nullframe Collective", "https://github.com/Nullframe-Collective/EnhancedPlus")]
 [assembly: MelonGame("ZeoWorks", "Slendytubbies 3")]
 [assembly: MelonColor(8, 245, 174, 39)]
 
@@ -12,13 +14,16 @@ namespace EnhancedPlus
 {
     public class Manager : MelonMod
     {
+        public static Config Config;
+        private ConfigManager _configManager = new();
         private WhoKilledWho _whoKilledWho;
         private bool _showInfoData = false;
         private int _sceneIndex;
 
         public override void OnInitializeMelon()
         {
-            MelonLogger.Msg("Initialized.");
+            LoggerInstance.Msg("Initialized.");
+            Config = _configManager.Load();
         }
 
         public override void OnSceneWasLoaded(int buildIndex, string sceneName)
@@ -29,12 +34,12 @@ namespace EnhancedPlus
 
         public override void OnUpdate()
         {
-            if (Input.GetKeyDown(KeyCode.F10))
+            if (Input.GetKeyDown(ConfigManager.TryParseKeyCode(Config.ShowInfoButton)))
             {
                 _showInfoData = !_showInfoData;
             }
 
-            if (Input.GetKeyDown(KeyCode.F9))
+            if (Input.GetKeyDown(ConfigManager.TryParseKeyCode(Config.ReturnToMenuButton)))
             {
                 SceneManager.LoadScene(0);
             }

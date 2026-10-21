@@ -23,9 +23,42 @@ namespace EnhancedPlus
 
                 if (playerName.text == RoomProperties.Current?.HostName)
                 {
-                    playerName.text = $"{playerName.text} — Host";
+                    playerName.text = $"{playerName.text} (Host)";
 
                     break;
+                }
+            }
+        }
+    }
+
+    [HarmonyPatch(typeof(SyncCustomization), "Start")]
+    public static class SyncCustomizationPatch
+    {
+        public static void Postfix(SyncCustomization __instance)
+        {
+            if (!Manager.Config.FixBrokenHats) return;
+
+            GameObject hats = __instance.LEEICKEPPEB?.gameObject;
+            if (hats == null) return;
+
+            foreach (Transform hat in hats.GetComponentsInChildren<Transform>(true))
+            {
+                if (hat.gameObject.name == "Fire (1)")
+                {
+                    ParticleSystem particleSystem = hat.gameObject.GetComponent<ParticleSystem>();
+                    if (particleSystem != null)
+                    {
+                        particleSystem.emission.enabled = true;
+                    }
+                }
+
+                if (hat.gameObject.name == "KnightHelmet")
+                {
+                    MeshRenderer meshRenderer = hat.gameObject.GetComponent<MeshRenderer>();
+                    if (meshRenderer != null)
+                    {
+                        meshRenderer.enabled = true;
+                    }
                 }
             }
         }
@@ -38,7 +71,8 @@ namespace EnhancedPlus
         {
             hat[] hats =
             [
-                //new hat { hatID = 74, hatName = "Bald (Sean's hat)", hatPrice = 0 },
+                new hat { hatID = 74, hatName = "Sean's Hat", hatPrice = 0 },
+                new hat { hatID = 23, hatName = "KnightHelmet", hatPrice = 0 },
                 new hat { hatID = 7, hatName = "Ushanka", hatPrice = 0 },
                 new hat { hatID = 15, hatName = "Fez", hatPrice = 0 },
                 new hat { hatID = 18, hatName = "HuntersHat", hatPrice = 0 },
@@ -54,7 +88,18 @@ namespace EnhancedPlus
 
             foreach (hat hat in hats)
             {
+                if ((hat.hatID == 23 || hat.hatID == 74) && !Manager.Config.FixBrokenHats) continue;
+
                 __instance.GKCNMADGAAF.Add(hat);
+            }
+
+            if (!Manager.Config.FixBrokenHats) return;
+
+            GameObject knightHelmet = __instance.LEEICKEPPEB?.Find("KnightHelmet").gameObject;
+            MeshRenderer meshRenderer = knightHelmet?.GetComponent<MeshRenderer>();
+            if (meshRenderer != null)
+            {
+                meshRenderer.enabled = true;
             }
         }
     }
